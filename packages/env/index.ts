@@ -1,1 +1,2 @@
-export { backEnv } from './back.end'
+export { backEnv } from './back.env'
+export { frontEnv } from './front.env'
