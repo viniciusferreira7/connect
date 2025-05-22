@@ -1,12 +1,15 @@
 import { backEnv } from '@connect/env'
 import { fastifyCors } from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
 import { fastify } from 'fastify'
 import {
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
+
+import { createSubscription } from './routes/subscriptions/create-subscription.js'
 
 const app = fastify()
 
@@ -38,6 +41,12 @@ app.register(fastifySwagger, {
   },
   transform: jsonSchemaTransform,
 })
+
+app.register(fastifySwaggerUi, {
+  routePrefix: '/docs',
+})
+
+app.register(createSubscription)
 
 app
   .listen({
