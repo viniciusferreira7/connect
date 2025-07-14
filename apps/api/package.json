@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "predev": "docker compose --env-file=../../.env up -d",
+    "predev": "cd ../../ && docker compose -p  connect-stack --env-file .env up -d",
     "env:load": "dotenv -e ../../.env --",
     "dev": "pnpm env:load tsx watch --env-file=../../.env src/http/server.ts",
     "db:migrate": "pnpm env:load prisma migrate dev",
