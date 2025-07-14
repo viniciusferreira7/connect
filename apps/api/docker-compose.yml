@@ -1,0 +1,54 @@
+services:
+  connect-postgresql:
+    container_name: connect-postgresql
+    image: bitnami/postgresql:17.2.0
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRESQL_USERNAME: ${DATABASE_USERNAME}
+      POSTGRESQL_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRESQL_DATABASE: ${DATABASE_NAME}
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U postgres -d postgres',
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    networks:
+      - connect-network
+    volumes:
+      - pg_data:/bitnami/postgresql
+
+  redis-service:
+    container_name: connect-redis
+    image: bitnami/redis:8.0.3
+    ports:
+      - 6379:6379
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      ALLOW_EMPTY_PASSWORD: no
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'redis-cli',
+          'ping',
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    networks:
+      - connect-network
+    volumes:
+      - redis_data:/bitnami/redis
+
+networks:
+  connect-network:
+    driver: bridge
+
+volumes:
+  pg_data:
+  redis_data:
