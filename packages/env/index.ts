@@ -1,2 +1,2 @@
-export { backEnv } from './back.env.js'
-export { frontEnv } from './front.env.js'
+export { backEnv } from './back.env'
+export { frontEnv } from './front.env'

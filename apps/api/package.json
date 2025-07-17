@@ -1,16 +1,18 @@
 {
   "name": "@connect/api",
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "predev": "cd ../../ && docker compose -p  connect-stack --env-file .env up -d",
+    "predev": "cd ../../ && docker-compose -p  connect-stack --env-file .env up -d",
     "env:load": "dotenv -e ../../.env --",
-    "dev": "pnpm env:load tsx watch --env-file=../../.env src/http/server.ts",
+    "generate:db": "pnpm env:load drizzle-kit generate",
+    "migrate:db": "pnpm env:load drizzle-kit migrate",
+    "studio:db": "pnpm env:load drizzle-kit studio --port 5555 --verbose",
+    "dev": "pnpm env:load tsx watch --env-file=../../.env src/server.ts",
     "db:migrate": "pnpm env:load prisma migrate dev",
     "db:deploy": "pnpm env:load prisma migrate deploy",
     "db:studio": "pnpm env:load prisma studio",
     "build": "tsup",
-    "start": "node dist/http/server.js",
+    "start": "node dist/server.js",
     "lint": "eslint --ext .ts src/ --fix"
   },
   "dependencies": {

@@ -9,7 +9,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 
-import { createSubscription } from './routes/subscriptions/create-subscription.js'
+import { createSubscription } from './http/routes/subscriptions/create-subscription'
 
 const app = fastify()
 
