@@ -9,6 +9,9 @@ export const backEnvSchema = z.object({
   DATABASE_PASSWORD: z.string(),
   DATABASE_NAME: z.string(),
 
+  REDIS_URL: z.url(),
+  REDIS_PASSWORD: z.string(),
+
   JWT_SECRET: z.string(),
   CLIENT_URL: z.url(),
 })
