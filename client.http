@@ -10,3 +10,5 @@ Content-Type: application/json
 }
 
 ###
+# @name access_invite_link
+GET {{{{baseUrl}}}}/invites/eacea44e-f08a-4c7b-9fc9-8141f56f7540
