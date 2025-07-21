@@ -8,9 +8,6 @@
     "migrate:db": "pnpm env:load drizzle-kit migrate",
     "studio:db": "pnpm env:load drizzle-kit studio --port 5555 --verbose",
     "dev": "pnpm env:load tsx watch --env-file=../../.env src/server.ts",
-    "db:migrate": "pnpm env:load prisma migrate dev",
-    "db:deploy": "pnpm env:load prisma migrate deploy",
-    "db:studio": "pnpm env:load prisma studio",
     "build": "tsup",
     "start": "node dist/server.js",
     "lint": "eslint --ext .ts src/ --fix"
