@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 import { db } from '@/database/drizzle/client'
 import { subscriptions } from '@/database/drizzle/schema/subscriptions'
+import { accessInviteLink } from '@/functions/access-invite-link'
 
 export async function accessInviteLinkRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -37,6 +38,8 @@ export async function accessInviteLinkRoute(app: FastifyInstance) {
       if (!subscriber) {
         return reply.status(404).send({ message: 'Subscriber not found' })
       }
+
+      await accessInviteLink({ subscriberId })
 
       redirectUrl.searchParams.set('referrer', subscriberId)
 
