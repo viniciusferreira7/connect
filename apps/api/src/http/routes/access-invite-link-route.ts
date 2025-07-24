@@ -20,7 +20,7 @@ export async function accessInviteLinkRoute(app: FastifyInstance) {
         }),
         response: {
           302: z.null(),
-          400: z.object({
+          404: z.object({
             message: z.string(),
           }),
         },

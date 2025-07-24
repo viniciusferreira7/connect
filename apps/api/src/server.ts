@@ -9,8 +9,9 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 
-import { accessInviteLinkRoute } from './http/routes/access-invite-link'
-import { createSubscription } from './http/routes/create-subscription'
+import { accessInviteLinkRoute } from './http/routes/access-invite-link-route'
+import { createSubscription } from './http/routes/create-subscription-route'
+import { getSubscriberInviteClicksRoute } from './http/routes/get-subscriber-invite-clicks-route'
 
 const app = fastify()
 
@@ -49,6 +50,7 @@ app.register(fastifySwaggerUi, {
 
 app.register(createSubscription)
 app.register(accessInviteLinkRoute)
+app.register(getSubscriberInviteClicksRoute)
 
 app
   .listen({

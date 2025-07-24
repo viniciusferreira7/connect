@@ -11,4 +11,8 @@ Content-Type: application/json
 
 ###
 # @name access_invite_link
-GET {{{{baseUrl}}}}/invites/eacea44e-f08a-4c7b-9fc9-8141f56f7540
+GET {{baseUrl}}/invites/eacea44e-f08a-4c7b-9fc9-8141f56f7540
+
+###
+# @name get_subscriber_invite_clicks
+GET {{baseUrl}}/subscribers/eacea44e-f08a-4c7b-9fc9-8141f56f7540/ranking/clicks
