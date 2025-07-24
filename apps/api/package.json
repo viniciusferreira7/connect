@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "predev": "cd ../../ && docker-compose -p  connect-stack --env-file .env up -d",
+    "stop:containers": "cd ../../ && docker-compose -p  connect-stack --env-file .env stop",
     "env:load": "dotenv -e ../../.env --",
     "generate:db": "pnpm env:load drizzle-kit generate",
     "migrate:db": "pnpm env:load drizzle-kit migrate",
