@@ -33,3 +33,7 @@ GET {{baseUrl}}/subscribers/{{subscriberId}}/ranking/clicks
 ###
 # @name get_subscriber_invites_count
 GET {{baseUrl}}/subscribers/{{subscriberId}}/ranking/count
+
+###
+# @name get_subscriber_ranking_position
+GET {{baseUrl}}/subscribers/{{subscriberId}}/ranking

@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { subscribeToEvent } from '@/functions/subscribe-to-event'
 
-export async function createSubscription(app: FastifyInstance) {
+export async function createSubscriptionRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/subscriptions',
     {
