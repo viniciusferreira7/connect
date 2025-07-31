@@ -12,7 +12,6 @@ export const backEnvSchema = z.object({
   REDIS_URL: z.url(),
   REDIS_PASSWORD: z.string(),
 
-  JWT_SECRET: z.string(),
   CLIENT_URL: z.url(),
 })
 
