@@ -10,7 +10,7 @@
     "studio:db": "pnpm env:load drizzle-kit studio --port 5555 --verbose",
     "dev": "pnpm env:load tsx watch --env-file=../../.env src/server.ts",
     "build": "tsup",
-    "start": "node dist/server.js",
+    "start": "node --env-file=../../.env dist/server.mjs",
     "lint": "eslint --ext .ts src/ --fix"
   },
   "dependencies": {
