@@ -11,6 +11,7 @@ import {
 
 import { accessInviteLinkRoute } from './http/routes/access-invite-link-route'
 import { createSubscriptionRoute } from './http/routes/create-subscription-route'
+import { getRankingRoute } from './http/routes/get-ranking-route'
 import { getSubscriberInviteClicksRoute } from './http/routes/get-subscriber-invite-clicks-route'
 import { getSubscriberInvitesCountRoute } from './http/routes/get-subscriber-invites-count-route'
 import { getSubscriberRankingPositionRoute } from './http/routes/get-subscriber-ranking-position-route'
@@ -55,6 +56,7 @@ app.register(accessInviteLinkRoute)
 app.register(getSubscriberInviteClicksRoute)
 app.register(getSubscriberInvitesCountRoute)
 app.register(getSubscriberRankingPositionRoute)
+app.register(getRankingRoute)
 
 app
   .listen({

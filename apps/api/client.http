@@ -6,7 +6,7 @@ POST {{baseUrl}}/subscriptions
 Content-Type: application/json
 
 {
-  "name": "John Doe",
+  "name": "John doe",
   "email": "john.doe@example.com"  
 }
 
@@ -17,8 +17,8 @@ POST {{baseUrl}}/subscriptions
 Content-Type: application/json
 
 {
-  "name": "Jana Doe",
-  "email": "jana.doe@example.com",
+  "name": "Lucas Doe",
+  "email": "lucas.doe@example.com",
   "referrer": "{{subscriberId}}" 
 }
 
@@ -37,3 +37,7 @@ GET {{baseUrl}}/subscribers/{{subscriberId}}/ranking/count
 ###
 # @name get_subscriber_ranking_position
 GET {{baseUrl}}/subscribers/{{subscriberId}}/ranking
+
+###
+# @name get_ranking
+GET {{baseUrl}}/ranking
