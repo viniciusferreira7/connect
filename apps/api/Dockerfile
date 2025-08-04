@@ -1,30 +1,54 @@
-FROM node:22.16.0-alpine AS builder
+# Alpine image
+FROM node:22.16.0-alpine AS alpine
+RUN apk update
+RUN apk add --no-cache libc6-compat
 
-RUN apk add --no-cache openssl curl
+# Setup pnpm and turbo on the alpine base
+FROM alpine AS base
+RUN npm install pnpm turbo@2.4.4 --global
+RUN pnpm config set store-dir ~/.pnpm-store
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Prune projects
+FROM base AS pruner
+ARG PROJECT
 
 WORKDIR /app
-
-COPY package.json ./
-
-RUN pnpm install --frozen-lockfile --prod
-
 COPY . .
+RUN turbo prune --scope=@connect/api --docker
 
-FROM node:22.16.0-alpine AS production
-
-RUN apk add --no-cache openssl curl && \
-    corepack enable && corepack prepare pnpm@latest --activate
+# Build the project
+FROM base AS builder
+ARG PROJECT
 
 WORKDIR /app
 
-COPY --from=builder /app /app
+# Copy lockfile and package.json's of isolated subworkspace
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=pruner /app/out/json/ .
 
-RUN pnpm store prune
+# First install the dependencies (as they change less often)
+RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile
+
+# Copy source code of isolated subworkspace
+COPY --from=pruner /app/out/full/ .
+
+RUN turbo build --filter=@connect/api
+RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
+RUN rm -rf ./**/*/src
+
+# Final image
+FROM alpine AS runner
+ARG PROJECT
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+USER nodejs
+
+WORKDIR /app
+COPY --from=builder --chown=nodejs:nodejs /app .
+WORKDIR /app/apps/api
 
 EXPOSE 3333
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s CMD pnpm run healthcheck-manual
 
 CMD ["sh", "-c", "pnpm run db:deploy && pnpm run build && pnpm start"]
