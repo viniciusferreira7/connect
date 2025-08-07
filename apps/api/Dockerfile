@@ -51,4 +51,4 @@ WORKDIR /app/apps/api
 
 EXPOSE 3333
 
-CMD ["sh", "-c", "pnpm run build && pnpm start"]
+CMD ["sh", "-c", "pnpm run build"]
