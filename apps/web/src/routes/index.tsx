@@ -1,3 +1,4 @@
+import { Button } from '@/components/button'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/')({
 function App() {
   return (
     <div className='text-blue-450'>
-      Hello word
+    <Button />
     </div>
   )
 }
