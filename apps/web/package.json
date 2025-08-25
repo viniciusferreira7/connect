@@ -8,21 +8,22 @@
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run",
-    "format": "biome format",
-    "lint": "biome lint",
-    "check": "biome check"
+    "lint": "eslint --ext .ts src/ --fix"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-router": "^1.130.2",
     "@tanstack/react-router-devtools": "^1.130.2",
     "@tanstack/router-plugin": "^1.121.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.541.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@connect/eslint-config": "workspace:*",
+    "@connect/prettier-config": "workspace:*",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/react": "^19.0.8",
@@ -33,5 +34,11 @@
     "vite": "^6.3.5",
     "vitest": "^3.0.5",
     "web-vitals": "^4.2.4"
-  }
+  },
+  "eslintConfig": {
+    "extends": [
+      "@connect/eslint-config/react"
+    ]
+  },
+  "prettier": "@connect/prettier-config"
 }
