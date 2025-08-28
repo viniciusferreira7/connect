@@ -26,7 +26,7 @@ function App() {
       <IconButton>
         <Copy />
       </IconButton>
-      <Input />
+      <Input placeholder="Digite seu e-mail" isError />
     </div>
   )
 }
