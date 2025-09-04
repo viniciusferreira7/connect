@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { InviteLinkInput } from './-components/invite-link-input'
+import { Ranking } from './-components/ranking'
 
 export const Route = createFileRoute('/invite/')({
   component: InviteComponent,
@@ -46,6 +47,7 @@ function InviteComponent() {
             </p>
           </div>
           <InviteLinkInput inviteLink={href} />
+          <Ranking />
         </div>
       </div>
     </div>
