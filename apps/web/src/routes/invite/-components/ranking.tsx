@@ -1,34 +1,47 @@
-import { BadgeCheck, Medal, MousePointerClick } from 'lucide-react'
-
 export function Ranking() {
   return (
-    <div className="grid gap-3 md:grid-cols-3">
-      <div className="relative grid place-items-center gap-1 rounded-xl border border-gray-600 bg-gray-700 px-4 py-7">
+    <div className="w-full max-w-[440px] space-y-5">
+      <h2 className="font-heading text-xl leading-none font-semibold text-gray-200">
+        Ranking de indicações
+      </h2>
+      <div className="relative flex flex-col justify-center gap-3 rounded-xl border border-gray-600 bg-gray-700 p-6">
+        <span className="text-sm leading-none text-gray-300">
+          <span className="font-semibold">1&ordm;</span> | Vinicius Ferreira
+        </span>
         <span className="font-heading text-2xl leading-none font-semibold text-gray-200">
-          1042
+          1030
         </span>
-        <span className="text-center text-sm leading-none text-gray-200">
-          Acessos ao link
-        </span>
-        <MousePointerClick className="text-purple absolute top-3 left-3 size-5" />
+        <img
+          src="/assets/medal-gold.svg"
+          alt=""
+          className="absolute top-0 right-8"
+        />
       </div>
-      <div className="relative grid place-items-center gap-1 rounded-xl border border-gray-600 bg-gray-700 px-4 py-7">
+      <div className="relative flex flex-col justify-center gap-3 rounded-xl border border-gray-600 bg-gray-700 p-6">
+        <span className="text-sm leading-none text-gray-300">
+          <span className="font-semibold">2&ordm;</span> | John Doe
+        </span>
         <span className="font-heading text-2xl leading-none font-semibold text-gray-200">
-          1042
+          923
         </span>
-        <span className="text-center text-sm leading-none text-gray-200">
-          Inscrições
-        </span>
-        <BadgeCheck className="text-purple absolute top-3 left-3 size-5" />
+        <img
+          src="/assets/medal-silver.svg"
+          alt=""
+          className="absolute top-0 right-8"
+        />
       </div>
-      <div className="relative grid place-items-center gap-1 rounded-xl border border-gray-600 bg-gray-700 px-4 py-7">
+      <div className="relative flex flex-col justify-center gap-3 rounded-xl border border-gray-600 bg-gray-700 p-6">
+        <span className="text-sm leading-none text-gray-300">
+          <span className="font-semibold">3&ordm;</span> | Jana Doe
+        </span>
         <span className="font-heading text-2xl leading-none font-semibold text-gray-200">
-          3º
+          463
         </span>
-        <span className="text-center text-sm leading-none text-gray-200">
-          Posição no ranking
-        </span>
-        <Medal className="text-purple absolute top-3 left-3 size-5" />
+        <img
+          src="/assets/medal-cooper.svg"
+          alt=""
+          className="absolute top-0 right-8"
+        />
       </div>
     </div>
   )
