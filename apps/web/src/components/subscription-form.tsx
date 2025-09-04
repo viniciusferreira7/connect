@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Mail, User } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod/v3'
@@ -14,6 +15,8 @@ const subscriptionSchema = z.object({
 type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export function SubscriptionForm() {
+  const navigate = useNavigate({ from: '/' })
+
   const {
     register,
     handleSubmit,
@@ -24,6 +27,9 @@ export function SubscriptionForm() {
 
   function onSubscribe(data: SubscriptionSchema) {
     console.log(data)
+    navigate({
+      to: '/invite',
+    })
   }
 
   return (
