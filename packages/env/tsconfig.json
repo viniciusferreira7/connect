@@ -1,4 +1,4 @@
 {
   "extends": "@connect/tsconfig/library.json",
-  "include": ["front.env.ts", "back.env.ts"]
+  "include": ["back.env.ts"]
 }

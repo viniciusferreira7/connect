@@ -45,7 +45,7 @@ function InviteIdComponent() {
               inscrições:
             </p>
           </div>
-          <InviteLinkInput inviteLink={''} />
+          <InviteLinkInput inviteLink={import.meta.env.VITE_API_URL} />
           <Stats />
         </div>
       </div>
