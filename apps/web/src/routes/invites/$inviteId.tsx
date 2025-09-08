@@ -4,8 +4,8 @@ import { InviteLinkInput } from './-components/invite-link-input'
 import { Ranking } from './-components/ranking'
 import { Stats } from './-components/stats'
 
-export const Route = createFileRoute('/invite/')({
-  component: InviteComponent,
+export const Route = createFileRoute('/invites/$inviteId')({
+  component: InviteIdComponent,
   head: () => ({
     meta: [
       {
@@ -15,9 +15,7 @@ export const Route = createFileRoute('/invite/')({
   }),
 })
 
-function InviteComponent() {
-  const href = window.location.href
-
+function InviteIdComponent() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-between gap-16 md:flex-row">
       <div className="flex w-full max-w-[550px] flex-col gap-10">
@@ -47,7 +45,7 @@ function InviteComponent() {
               inscrições:
             </p>
           </div>
-          <InviteLinkInput inviteLink={href} />
+          <InviteLinkInput inviteLink={''} />
           <Stats />
         </div>
       </div>

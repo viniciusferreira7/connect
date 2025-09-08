@@ -28,7 +28,7 @@ export function SubscriptionForm() {
   function onSubscribe(data: SubscriptionSchema) {
     console.log(data)
     navigate({
-      to: '/invite',
+      to: '/invites',
     })
   }
 

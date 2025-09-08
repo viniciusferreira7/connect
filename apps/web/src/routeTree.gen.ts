@@ -10,43 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as InviteIndexRouteImport } from './routes/invite/index'
+import { Route as InvitesIndexRouteImport } from './routes/invites/index'
+import { Route as InvitesInviteIdRouteImport } from './routes/invites/$inviteId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InviteIndexRoute = InviteIndexRouteImport.update({
-  id: '/invite/',
-  path: '/invite/',
+const InvitesIndexRoute = InvitesIndexRouteImport.update({
+  id: '/invites/',
+  path: '/invites/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvitesInviteIdRoute = InvitesInviteIdRouteImport.update({
+  id: '/invites/$inviteId',
+  path: '/invites/$inviteId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/invite': typeof InviteIndexRoute
+  '/invites/$inviteId': typeof InvitesInviteIdRoute
+  '/invites': typeof InvitesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/invite': typeof InviteIndexRoute
+  '/invites/$inviteId': typeof InvitesInviteIdRoute
+  '/invites': typeof InvitesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/invite/': typeof InviteIndexRoute
+  '/invites/$inviteId': typeof InvitesInviteIdRoute
+  '/invites/': typeof InvitesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/invite'
+  fullPaths: '/' | '/invites/$inviteId' | '/invites'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/invite'
-  id: '__root__' | '/' | '/invite/'
+  to: '/' | '/invites/$inviteId' | '/invites'
+  id: '__root__' | '/' | '/invites/$inviteId' | '/invites/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  InviteIndexRoute: typeof InviteIndexRoute
+  InvitesInviteIdRoute: typeof InvitesInviteIdRoute
+  InvitesIndexRoute: typeof InvitesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +68,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/invite/': {
-      id: '/invite/'
-      path: '/invite'
-      fullPath: '/invite'
-      preLoaderRoute: typeof InviteIndexRouteImport
+    '/invites/': {
+      id: '/invites/'
+      path: '/invites'
+      fullPath: '/invites'
+      preLoaderRoute: typeof InvitesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invites/$inviteId': {
+      id: '/invites/$inviteId'
+      path: '/invites/$inviteId'
+      fullPath: '/invites/$inviteId'
+      preLoaderRoute: typeof InvitesInviteIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -70,7 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  InviteIndexRoute: InviteIndexRoute,
+  InvitesInviteIdRoute: InvitesInviteIdRoute,
+  InvitesIndexRoute: InvitesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
