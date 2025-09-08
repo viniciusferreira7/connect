@@ -1,13 +1,17 @@
+import { useParams } from '@tanstack/react-router'
 import { Copy, Link } from 'lucide-react'
 
 import { IconButton } from '@/components/icon-button'
 import { InputField, InputIcon, InputRoot } from '@/components/input'
 
-interface InviteLinkInputProps {
-  inviteLink: string
-}
+export function InviteLinkInput() {
+  const { inviteId } = useParams({ strict: false })
+  const apiUrl = import.meta.env.VITE_API_URL
 
-export function InviteLinkInput({ inviteLink }: InviteLinkInputProps) {
+  const inviteUrl = new URL(`/invites/${inviteId}`, apiUrl)
+
+  const inviteLink = inviteUrl.toString()
+
   function copyInviteLink() {
     navigator.clipboard.writeText(inviteLink)
   }

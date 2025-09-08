@@ -61,7 +61,7 @@ app.register(getRankingRoute)
 app
   .listen({
     port: backEnv.PORT,
-    host: backEnv.NODE_ENV === 'dev' ? undefined : '0.0.0.0',
+    host: backEnv.NODE_ENV === 'development' ? undefined : '0.0.0.0',
   })
   .then(() => {
     console.log('HTTP server is running! 🚀')
