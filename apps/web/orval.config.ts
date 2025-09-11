@@ -15,9 +15,11 @@ export default defineConfig({
       baseUrl: process.env.VITE_API_URL,
       override: {
         fetch: {
-          includeHttpResponseReturnType: false
+          includeHttpResponseReturnType: false,
         },
-      }
+      },
     },
   },
 })
+
+// TODO: 26:44
