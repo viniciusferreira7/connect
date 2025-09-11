@@ -1,9 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Radio } from 'lucide-react'
+import z from 'zod/v4'
 
 import { SubscriptionForm } from '@/components/subscription-form'
 
+const homeSearchParamsSchema = z.object({
+  referrer: z.string().optional(),
+})
+
 export const Route = createFileRoute('/')({
+  validateSearch: (search: Record<string, unknown>) =>
+    homeSearchParamsSchema.parse(search),
   component: App,
   head: () => ({
     meta: [

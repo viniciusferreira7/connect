@@ -7,6 +7,7 @@
  */
 import type {
   MutationFunction,
+  QueryClient,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
@@ -17,6 +18,9 @@ import type {
   PostSubscriptions400,
   PostSubscriptionsBody,
 } from '../../models'
+import { customFetch } from '.././custom-fetch'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
  * @summary Subscriber someone to the event
@@ -29,7 +33,7 @@ export const postSubscriptions = async (
   postSubscriptionsBody: PostSubscriptionsBody,
   options?: RequestInit,
 ): Promise<PostSubscriptions201> => {
-  const res = await fetch(getPostSubscriptionsUrl(), {
+  return customFetch<PostSubscriptions201>(getPostSubscriptionsUrl(), {
     ...options,
     method: 'POST',
     headers: {
@@ -38,11 +42,6 @@ export const postSubscriptions = async (
     },
     body: JSON.stringify(postSubscriptionsBody),
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostSubscriptions201 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 export const getPostSubscriptionsMutationOptions = <
@@ -57,7 +56,7 @@ export const getPostSubscriptionsMutationOptions = <
     },
     TContext
   >
-  fetch?: RequestInit
+  request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postSubscriptions>>,
   TError,
@@ -67,7 +66,7 @@ export const getPostSubscriptionsMutationOptions = <
   TContext
 > => {
   const mutationKey = ['postSubscriptions']
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
       options.mutation.mutationKey
@@ -83,7 +82,7 @@ export const getPostSubscriptionsMutationOptions = <
         mutation: {
           mutationKey,
         },
-        fetch: undefined,
+        request: undefined,
       }
 
   const mutationFn: MutationFunction<
@@ -94,7 +93,7 @@ export const getPostSubscriptionsMutationOptions = <
   > = (props) => {
     const { data } = props ?? {}
 
-    return postSubscriptions(data, fetchOptions)
+    return postSubscriptions(data, requestOptions)
   }
 
   return {
@@ -115,17 +114,20 @@ export type PostSubscriptionsMutationError = PostSubscriptions400
 export const usePostSubscriptions = <
   TError = PostSubscriptions400,
   TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postSubscriptions>>,
-    TError,
-    {
-      data: PostSubscriptionsBody
-    },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationResult<
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postSubscriptions>>,
+      TError,
+      {
+        data: PostSubscriptionsBody
+      },
+      TContext
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
   Awaited<ReturnType<typeof postSubscriptions>>,
   TError,
   {
@@ -135,5 +137,5 @@ export const usePostSubscriptions = <
 > => {
   const mutationOptions = getPostSubscriptionsMutationOptions(options)
 
-  return useMutation(mutationOptions)
+  return useMutation(mutationOptions, queryClient)
 }

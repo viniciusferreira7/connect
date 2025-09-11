@@ -10,16 +10,18 @@ export default defineConfig({
       namingConvention: 'kebab-case',
       schemas: './src/models',
       mode: 'tags-split',
-      clean: true,
+      // clean: true,
       prettier: true,
       baseUrl: process.env.VITE_API_URL,
       override: {
         fetch: {
           includeHttpResponseReturnType: false,
         },
+        mutator: {
+          path: './src/http/custom-fetch.ts',
+          name: 'customFetch',
+        },
       },
     },
   },
 })
-
-// TODO: 26:44

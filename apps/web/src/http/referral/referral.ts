@@ -6,8 +6,13 @@
  * OpenAPI spec version: 1.0.0
  */
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
+  QueryClient,
   QueryFunction,
   QueryKey,
+  UndefinedInitialDataOptions,
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
@@ -25,6 +30,9 @@ import type {
   GetSubscribersSubscriberIdRankingCount200,
   GetSubscribersSubscriberIdRankingCount404,
 } from '../../models'
+import { customFetch } from '.././custom-fetch'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
  * @summary Access invite link and redirects user
@@ -37,15 +45,10 @@ export const getInvitesSubscriberId = async (
   subscriberId: string,
   options?: RequestInit,
 ): Promise<unknown> => {
-  const res = await fetch(getGetInvitesSubscriberIdUrl(subscriberId), {
+  return customFetch<unknown>(getGetInvitesSubscriberIdUrl(subscriberId), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: unknown = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 export const getGetInvitesSubscriberIdQueryKey = (subscriberId?: string) => {
@@ -58,15 +61,17 @@ export const getGetInvitesSubscriberIdQueryOptions = <
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getInvitesSubscriberId>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ?? getGetInvitesSubscriberIdQueryKey(subscriberId)
@@ -76,7 +81,7 @@ export const getGetInvitesSubscriberIdQueryOptions = <
   > = ({ signal }) =>
     getInvitesSubscriberId(subscriberId, {
       signal,
-      ...fetchOptions,
+      ...requestOptions,
     })
 
   return {
@@ -89,7 +94,7 @@ export const getGetInvitesSubscriberIdQueryOptions = <
     TError,
     TData
   > & {
-    queryKey: QueryKey
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 }
 
@@ -100,6 +105,79 @@ export type GetInvitesSubscriberIdQueryError =
   | GetInvitesSubscriberId302
   | GetInvitesSubscriberId404
 
+export function useGetInvitesSubscriberId<
+  TData = Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+  TError = GetInvitesSubscriberId302 | GetInvitesSubscriberId404,
+>(
+  subscriberId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+          TError,
+          Awaited<ReturnType<typeof getInvitesSubscriberId>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetInvitesSubscriberId<
+  TData = Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+  TError = GetInvitesSubscriberId302 | GetInvitesSubscriberId404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+          TError,
+          Awaited<ReturnType<typeof getInvitesSubscriberId>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetInvitesSubscriberId<
+  TData = Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+  TError = GetInvitesSubscriberId302 | GetInvitesSubscriberId404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
 /**
  * @summary Access invite link and redirects user
  */
@@ -110,23 +188,29 @@ export function useGetInvitesSubscriberId<
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getInvitesSubscriberId>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getInvitesSubscriberId>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: QueryKey
+  queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetInvitesSubscriberIdQueryOptions(
     subscriberId,
     options,
   )
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & {
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 
   query.queryKey = queryOptions.queryKey
@@ -147,20 +231,13 @@ export const getSubscribersSubscriberIdRankingClicks = async (
   subscriberId: string,
   options?: RequestInit,
 ): Promise<GetSubscribersSubscriberIdRankingClicks200> => {
-  const res = await fetch(
+  return customFetch<GetSubscribersSubscriberIdRankingClicks200>(
     getGetSubscribersSubscriberIdRankingClicksUrl(subscriberId),
     {
       ...options,
       method: 'GET',
     },
   )
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetSubscribersSubscriberIdRankingClicks200 = body
-    ? JSON.parse(body)
-    : {}
-
-  return data
 }
 
 export const getGetSubscribersSubscriberIdRankingClicksQueryKey = (
@@ -177,15 +254,17 @@ export const getGetSubscribersSubscriberIdRankingClicksQueryOptions = <
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ??
@@ -196,7 +275,7 @@ export const getGetSubscribersSubscriberIdRankingClicksQueryOptions = <
   > = ({ signal }) =>
     getSubscribersSubscriberIdRankingClicks(subscriberId, {
       signal,
-      ...fetchOptions,
+      ...requestOptions,
     })
 
   return {
@@ -209,7 +288,7 @@ export const getGetSubscribersSubscriberIdRankingClicksQueryOptions = <
     TError,
     TData
   > & {
-    queryKey: QueryKey
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 }
 
@@ -219,6 +298,79 @@ export type GetSubscribersSubscriberIdRankingClicksQueryResult = NonNullable<
 export type GetSubscribersSubscriberIdRankingClicksQueryError =
   GetSubscribersSubscriberIdRankingClicks404
 
+export function useGetSubscribersSubscriberIdRankingClicks<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+  TError = GetSubscribersSubscriberIdRankingClicks404,
+>(
+  subscriberId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+          TError,
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetSubscribersSubscriberIdRankingClicks<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+  TError = GetSubscribersSubscriberIdRankingClicks404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+          TError,
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetSubscribersSubscriberIdRankingClicks<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+  TError = GetSubscribersSubscriberIdRankingClicks404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
 /**
  * @summary Get subscriber invite clicks count
  */
@@ -229,23 +381,29 @@ export function useGetSubscribersSubscriberIdRankingClicks<
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: QueryKey
+  queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetSubscribersSubscriberIdRankingClicksQueryOptions(
     subscriberId,
     options,
   )
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & {
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 
   query.queryKey = queryOptions.queryKey
@@ -266,20 +424,13 @@ export const getSubscribersSubscriberIdRankingCount = async (
   subscriberId: string,
   options?: RequestInit,
 ): Promise<GetSubscribersSubscriberIdRankingCount200> => {
-  const res = await fetch(
+  return customFetch<GetSubscribersSubscriberIdRankingCount200>(
     getGetSubscribersSubscriberIdRankingCountUrl(subscriberId),
     {
       ...options,
       method: 'GET',
     },
   )
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetSubscribersSubscriberIdRankingCount200 = body
-    ? JSON.parse(body)
-    : {}
-
-  return data
 }
 
 export const getGetSubscribersSubscriberIdRankingCountQueryKey = (
@@ -296,15 +447,17 @@ export const getGetSubscribersSubscriberIdRankingCountQueryOptions = <
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ??
@@ -315,7 +468,7 @@ export const getGetSubscribersSubscriberIdRankingCountQueryOptions = <
   > = ({ signal }) =>
     getSubscribersSubscriberIdRankingCount(subscriberId, {
       signal,
-      ...fetchOptions,
+      ...requestOptions,
     })
 
   return {
@@ -328,7 +481,7 @@ export const getGetSubscribersSubscriberIdRankingCountQueryOptions = <
     TError,
     TData
   > & {
-    queryKey: QueryKey
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 }
 
@@ -338,6 +491,79 @@ export type GetSubscribersSubscriberIdRankingCountQueryResult = NonNullable<
 export type GetSubscribersSubscriberIdRankingCountQueryError =
   GetSubscribersSubscriberIdRankingCount404
 
+export function useGetSubscribersSubscriberIdRankingCount<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+  TError = GetSubscribersSubscriberIdRankingCount404,
+>(
+  subscriberId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+          TError,
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetSubscribersSubscriberIdRankingCount<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+  TError = GetSubscribersSubscriberIdRankingCount404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+          TError,
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetSubscribersSubscriberIdRankingCount<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+  TError = GetSubscribersSubscriberIdRankingCount404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
 /**
  * @summary Get subscriber invites count
  */
@@ -348,23 +574,29 @@ export function useGetSubscribersSubscriberIdRankingCount<
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingCount>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: QueryKey
+  queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetSubscribersSubscriberIdRankingCountQueryOptions(
     subscriberId,
     options,
   )
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & {
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 
   query.queryKey = queryOptions.queryKey
@@ -385,20 +617,13 @@ export const getSubscribersSubscriberIdRanking = async (
   subscriberId: string,
   options?: RequestInit,
 ): Promise<GetSubscribersSubscriberIdRanking200> => {
-  const res = await fetch(
+  return customFetch<GetSubscribersSubscriberIdRanking200>(
     getGetSubscribersSubscriberIdRankingUrl(subscriberId),
     {
       ...options,
       method: 'GET',
     },
   )
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetSubscribersSubscriberIdRanking200 = body
-    ? JSON.parse(body)
-    : {}
-
-  return data
 }
 
 export const getGetSubscribersSubscriberIdRankingQueryKey = (
@@ -413,15 +638,17 @@ export const getGetSubscribersSubscriberIdRankingQueryOptions = <
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ??
@@ -432,7 +659,7 @@ export const getGetSubscribersSubscriberIdRankingQueryOptions = <
   > = ({ signal }) =>
     getSubscribersSubscriberIdRanking(subscriberId, {
       signal,
-      ...fetchOptions,
+      ...requestOptions,
     })
 
   return {
@@ -445,7 +672,7 @@ export const getGetSubscribersSubscriberIdRankingQueryOptions = <
     TError,
     TData
   > & {
-    queryKey: QueryKey
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 }
 
@@ -455,6 +682,79 @@ export type GetSubscribersSubscriberIdRankingQueryResult = NonNullable<
 export type GetSubscribersSubscriberIdRankingQueryError =
   GetSubscribersSubscriberIdRanking404
 
+export function useGetSubscribersSubscriberIdRanking<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+  TError = GetSubscribersSubscriberIdRanking404,
+>(
+  subscriberId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+          TError,
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetSubscribersSubscriberIdRanking<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+  TError = GetSubscribersSubscriberIdRanking404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+          TError,
+          Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetSubscribersSubscriberIdRanking<
+  TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+  TError = GetSubscribersSubscriberIdRanking404,
+>(
+  subscriberId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
 /**
  * @summary Get subscriber ranking position
  */
@@ -465,23 +765,29 @@ export function useGetSubscribersSubscriberIdRanking<
 >(
   subscriberId: string,
   options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
-      TError,
-      TData
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscribersSubscriberIdRanking>>,
+        TError,
+        TData
+      >
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customFetch>
   },
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: QueryKey
+  queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetSubscribersSubscriberIdRankingQueryOptions(
     subscriberId,
     options,
   )
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & {
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 
   query.queryKey = queryOptions.queryKey
@@ -499,15 +805,10 @@ export const getGetRankingUrl = () => {
 export const getRanking = async (
   options?: RequestInit,
 ): Promise<GetRanking200> => {
-  const res = await fetch(getGetRankingUrl(), {
+  return customFetch<GetRanking200>(getGetRankingUrl(), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetRanking200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 export const getGetRankingQueryKey = () => {
@@ -518,10 +819,12 @@ export const getGetRankingQueryOptions = <
   TData = Awaited<ReturnType<typeof getRanking>>,
   TError = GetRanking404,
 >(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<typeof getRanking>>, TError, TData>
-  fetch?: RequestInit
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getRanking>>, TError, TData>
+  >
+  request?: SecondParameter<typeof customFetch>
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey = queryOptions?.queryKey ?? getGetRankingQueryKey()
 
@@ -530,7 +833,7 @@ export const getGetRankingQueryOptions = <
   }) =>
     getRanking({
       signal,
-      ...fetchOptions,
+      ...requestOptions,
     })
 
   return {
@@ -542,7 +845,7 @@ export const getGetRankingQueryOptions = <
     TError,
     TData
   > & {
-    queryKey: QueryKey
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 }
 
@@ -551,6 +854,64 @@ export type GetRankingQueryResult = NonNullable<
 >
 export type GetRankingQueryError = GetRanking404
 
+export function useGetRanking<
+  TData = Awaited<ReturnType<typeof getRanking>>,
+  TError = GetRanking404,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getRanking>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getRanking>>,
+          TError,
+          Awaited<ReturnType<typeof getRanking>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetRanking<
+  TData = Awaited<ReturnType<typeof getRanking>>,
+  TError = GetRanking404,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getRanking>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getRanking>>,
+          TError,
+          Awaited<ReturnType<typeof getRanking>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetRanking<
+  TData = Awaited<ReturnType<typeof getRanking>>,
+  TError = GetRanking404,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getRanking>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
 /**
  * @summary Get ranking
  */
@@ -558,16 +919,24 @@ export type GetRankingQueryError = GetRanking404
 export function useGetRanking<
   TData = Awaited<ReturnType<typeof getRanking>>,
   TError = GetRanking404,
->(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<typeof getRanking>>, TError, TData>
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
-  queryKey: QueryKey
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getRanking>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetRankingQueryOptions(options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & {
+    queryKey: DataTag<QueryKey, TData, TError>
   }
 
   query.queryKey = queryOptions.queryKey

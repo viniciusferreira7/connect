@@ -1,8 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ArrowRight, Mail, User } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod/v3'
+
+import { usePostSubscriptions } from '@/http/subscriptions/subscriptions'
+import { formatResponseErrors } from '@/utils/format-response-errors'
 
 import { Button } from './button'
 import { InputField, InputIcon, InputRoot } from './input'
@@ -15,7 +19,12 @@ const subscriptionSchema = z.object({
 type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export function SubscriptionForm() {
+  const search = useSearch({ from: '/', strict: true })
   const navigate = useNavigate({ from: '/' })
+
+  const { mutate, isPending, error } = usePostSubscriptions()
+
+  console.log(error)
 
   const {
     register,
@@ -23,13 +32,36 @@ export function SubscriptionForm() {
     formState: { errors },
   } = useForm<SubscriptionSchema>({
     resolver: zodResolver(subscriptionSchema),
+    disabled: isPending,
   })
 
   function onSubscribe(data: SubscriptionSchema) {
-    console.log(data)
-    navigate({
-      to: '/invites',
-    })
+    mutate(
+      {
+        data: {
+          name: data.name,
+          email: data.email,
+          referrer: search?.referrer,
+        },
+      },
+      {
+        onSuccess: (data) => {
+          navigate({
+            to: '/invites/$inviteId',
+            params: {
+              inviteId: data?.subscriberId,
+            },
+          })
+        },
+        onError: (error) => {
+          const { message, description } = formatResponseErrors(error)
+
+          toast.error(message, {
+            description,
+          })
+        },
+      },
+    )
   }
 
   return (
@@ -80,7 +112,7 @@ export function SubscriptionForm() {
         </div>
       </div>
 
-      <Button type="submit">
+      <Button type="submit" disabled={isPending}>
         Confirmar
         <ArrowRight className="size-6" />
       </Button>

@@ -22,6 +22,11 @@ export async function createSubscriptionRoute(app: FastifyInstance) {
           }),
           400: z.object({
             message: z.string(),
+            issue: z
+              .object({
+                _errors: z.array(z.string()),
+              })
+              .catchall(z.any()),
           }),
         },
       },

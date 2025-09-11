@@ -8,6 +8,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
+import { ZodError } from 'zod'
 
 import { accessInviteLinkRoute } from './http/routes/access-invite-link-route'
 import { createSubscriptionRoute } from './http/routes/create-subscription-route'
@@ -57,6 +58,17 @@ app.register(getSubscriberInviteClicksRoute)
 app.register(getSubscriberInvitesCountRoute)
 app.register(getSubscriberRankingPositionRoute)
 app.register(getRankingRoute)
+
+app.setErrorHandler((error, _, reply) => {
+  if (error instanceof ZodError) {
+    console.log({ issue: JSON.stringify(error.format()) })
+    reply
+      .status(400)
+      .send({ message: 'Validation error', issue: error.format() })
+  }
+
+  return reply.status(500).send(error)
+})
 
 app
   .listen({

@@ -5,7 +5,9 @@
  * Full-stack app.
  * OpenAPI spec version: 1.0.0
  */
+import type { PostSubscriptions400Issue } from './post-subscriptions400-issue'
 
 export type PostSubscriptions400 = {
   message: string
+  issue: PostSubscriptions400Issue
 }
