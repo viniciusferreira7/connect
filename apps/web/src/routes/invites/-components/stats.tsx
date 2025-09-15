@@ -68,7 +68,7 @@ export function Stats() {
       </div>
       <div className="relative grid place-items-center gap-1 rounded-xl border border-gray-600 bg-gray-700 px-4 py-7">
         <span className="font-heading text-2xl leading-none font-semibold text-gray-200">
-          {subscriberRankingPosition?.data?.position ?? 'N/A'}
+          {subscriberRankingPosition?.data?.position ?? '-'}
         </span>
         <span className="text-center text-sm leading-none text-gray-200">
           Posição no ranking
