@@ -29,8 +29,8 @@ import type {
   GetSubscribersSubscriberIdRankingClicks404,
   GetSubscribersSubscriberIdRankingCount200,
   GetSubscribersSubscriberIdRankingCount404,
-} from '../../models'
-import { customFetch } from '.././custom-fetch'
+} from '../../../models'
+import { customFetch } from '../../custom-fetch'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -374,7 +374,6 @@ export function useGetSubscribersSubscriberIdRankingClicks<
 /**
  * @summary Get subscriber invite clicks count
  */
-
 export function useGetSubscribersSubscriberIdRankingClicks<
   TData = Awaited<ReturnType<typeof getSubscribersSubscriberIdRankingClicks>>,
   TError = GetSubscribersSubscriberIdRankingClicks404,

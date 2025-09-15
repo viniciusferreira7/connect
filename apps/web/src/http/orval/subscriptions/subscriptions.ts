@@ -17,8 +17,8 @@ import type {
   PostSubscriptions201,
   PostSubscriptions400,
   PostSubscriptionsBody,
-} from '../../models'
-import { customFetch } from '.././custom-fetch'
+} from '../../../models'
+import { customFetch } from '../../custom-fetch'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

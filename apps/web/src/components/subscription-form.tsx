@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod/v3'
 
-import { usePostSubscriptions } from '@/http/subscriptions/subscriptions'
+import { usePostSubscriptions } from '@/http/orval/subscriptions/subscriptions'
 import { formatResponseErrors } from '@/utils/format-response-errors'
 
 import { Button } from './button'
@@ -22,9 +22,7 @@ export function SubscriptionForm() {
   const search = useSearch({ from: '/', strict: true })
   const navigate = useNavigate({ from: '/' })
 
-  const { mutate, isPending, error } = usePostSubscriptions()
-
-  console.log(error)
+  const { mutate, isPending } = usePostSubscriptions()
 
   const {
     register,
